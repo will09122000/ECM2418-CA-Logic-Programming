@@ -28,12 +28,15 @@ mineral( sodium ).
 mineral( silver ).
 mineral( zircon ).
 
-spell (E, [X])
-    :- [x] is atom_chars(E, [X]).
 
+
+
+main :-
+    MyAnimal = 452589,
+    MyVegetable = 658785,
+    MyMineral = 7378719,
+    Word = [],
     
 
-main
     %:- animal( dingo ).
-    :- spell( test, X ), write(X).
-    
+    %:- atom_chars( test, X ), write(X).
