@@ -78,9 +78,7 @@ partys( PARTYS )
         sort(PARTYS_SORTED, PARTYS).
 
 main
-    %:- par(7826).
+    %:- par( 7826 ).
     %:- pars( PARS ), write( PARS ).
     %:- party( 9632, 5418 ).
-    %:- pars( PARS ), write( PARS ),
-        %findPossiblePartys(PARS, PossiblePartys), write(PossiblePartys).
     :- partys( PARTYS ), write( PARTYS ).
