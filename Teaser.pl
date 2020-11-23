@@ -20,6 +20,12 @@ findPossiblePartys(PARS, PossiblePartys)
 
 firstElement(X,[X|_]).
 
+sort_partys([], []).
+sort_partys([H|T], X)
+    :- sort(H, Y),
+        append(PARTYS, [Y], X),
+        sort_partys(T, PARTYS).
+
 par( X )
     :- atom_length( X,4 ),
         atom_chars( X,Y ),
@@ -67,7 +73,9 @@ party( [A,B] )
 partys( PARTYS )
     :- pars( PARS ),
         findPossiblePartys(PARS, PossiblePartys),
-        include(party, PossiblePartys, PARTYS).
+        include(party, PossiblePartys, PARTYS_UNSORTED),
+        sort_partys(PARTYS_UNSORTED, PARTYS_SORTED),
+        sort(PARTYS_SORTED, PARTYS).
 
 main
     %:- par(7826).
