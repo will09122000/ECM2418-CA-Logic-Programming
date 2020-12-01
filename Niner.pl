@@ -31,33 +31,38 @@ mineral( sodium ).
 mineral( silver ).
 mineral( zircon ).
 
-isWord( X, Y )
-    :- atom_length(X, XL),
-        atom_length(Y, YL),
-        writeln([XL, YL]).
+isEqualLength( X, Y )
+    :- atom_length(X, XLen),
+        atom_length(Y, YLen),
+        XLen is YLen.
 
+removeImpossibleObjects(A, X, Y)
+    :- include(isEqualLength(A), X, Y).
 
+firstElement(X,[X|_]).
 
-
-findWord( X )
-    :- forall( animal(Y), isWord(X, Y) ).
-    
-append3(X, Y, Z, Total) :-
-    append(X, YZ, Total),
-    append(Y, Z, YZ).
-
+tryCombination(X, Y, Z)
+    :- Word = [0,0,0,0,0,0,0,0,0].
 
 
 main :-
     MyAnimal = '452589',
     MyVegetable = '658785',
     MyMineral = '7378719',
-    atom_chars(MyAnimal, MyAnimalList),
-    atom_chars(MyVegetable, MyVegetableList),
-    atom_chars(MyMineral, MyMineralList),
-    append3(MyAnimalList, MyVegetableList, MyMineralList, T),
-    sort(T, T1),
-    writeln( T1 ),
-    Word = [0,0,0,0,0,0,0,0,0].
+    findall( X, animal( X ), Animals ),
+    findall( X, vegetable( X ), Vegetables ),
+    findall( X, mineral( X ), Minerals ),
+    removeImpossibleObjects(MyAnimal, Animals, Animals1),
+    removeImpossibleObjects(MyVegetable, Vegetables, Vegetables1),
+    removeImpossibleObjects(MyMineral, Minerals, Minerals1),
+    writeln(Animals1),
+    writeln(Vegetables1),
+    writeln(Minerals1),
+    Word = [0,0,0,0,0,0,0,0,0],
+    firstElement(F1, Animals1),
+    firstElement(F2, Animals1),
+    firstElement(F3, Animals1),
+
+    writeln(F1).
     %:- animal( dingo ).
     %atom_chars( test, X ), write(X).
