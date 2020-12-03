@@ -39,30 +39,36 @@ isEqualLength( X, Y )
 removeImpossibleObjects(A, X, Y)
     :- include(isEqualLength(A), X, Y).
 
-firstElement(X,[X|_]).
-
 tryCombination(X, Y, Z)
     :- Word = [0,0,0,0,0,0,0,0,0].
 
+firstElement([X|_],X).
+
+process(Position, WordList, Letter)
+    :- writeln('yes').
+
+do([],_,_).
+do([H|T],[H1|T1], X)
+    :- process(H,H1,X),
+        writeln('no'),
+        do(T, T1, X).
+
+spell(X, Y)
+    :- atom_chars(X, Y).
 
 main :-
-    MyAnimal = '452589',
-    MyVegetable = '658785',
-    MyMineral = '7378719',
+    MyAnimal = [4,5,2,5,8,9],
+    MyVegetable = [6,5,8,7,8,5],
+    MyMineral = [7,3,7,8,7,1,9],
     findall( X, animal( X ), Animals ),
     findall( X, vegetable( X ), Vegetables ),
     findall( X, mineral( X ), Minerals ),
     removeImpossibleObjects(MyAnimal, Animals, Animals1),
     removeImpossibleObjects(MyVegetable, Vegetables, Vegetables1),
     removeImpossibleObjects(MyMineral, Minerals, Minerals1),
-    writeln(Animals1),
-    writeln(Vegetables1),
-    writeln(Minerals1),
     Word = [0,0,0,0,0,0,0,0,0],
-    firstElement(F1, Animals1),
-    firstElement(F2, Animals1),
-    firstElement(F3, Animals1),
-
-    writeln(F1).
+    firstElement(Animals1, PossibleAnimal),
+    writeln(PossibleAnimal),
+    %do(MyAnimal, PossibleAnimal, Word).
     %:- animal( dingo ).
-    %atom_chars( test, X ), write(X).
+    spell( PossibleAnimal, X ), write(X).
