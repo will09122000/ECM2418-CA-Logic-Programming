@@ -9,6 +9,7 @@ animal( horse ).
 animal( jaguar ).
 animal( kangaroo ).
 
+% Vegetables
 vegetable( artichoke ).
 vegetable( cabbage ).
 vegetable( carrot ).
@@ -19,6 +20,7 @@ vegetable( marrow ).
 vegetable( onion ).
 vegetable( potato ).
 
+% Minerals
 mineral( anatase ).
 mineral( basalt ).
 mineral( cobolt ).

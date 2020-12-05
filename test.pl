@@ -31,44 +31,45 @@ mineral( sodium ).
 mineral( silver ).
 mineral( zircon ).
 
-isEqualLength( X, Y )
-    :- atom_length(X, XLen),
-        atom_length(Y, YLen),
-        XLen is YLen.
+spell(X, Z)
+    :- atom_chars(X, Z).
 
-removeImpossibleObjects(A, X, Y)
-    :- include(isEqualLength(A), X, Y).
+findAnimal(MyAnimal, MyAnimalList)
+    :- animal(MyAnimal),
+        spell(MyAnimal, [_,X,_,X,_,_]),
+        spell(MyAnimal, MyAnimalList).
 
-tryCombination(X, Y, Z)
-    :- Word = [0,0,0,0,0,0,0,0,0].
+findVegetable(MyVegetable, MyVegetableList)
+    :- vegetable(MyVegetable),
+        spell(MyVegetable, [_,_,X,_,X,_]),
+        spell(MyVegetable, MyVegetableList).
 
-firstElement([X|_],X).
+findMineral(MyMineral, MyMineralList)
+    :- mineral(MyMineral),
+        spell(MyMineral, [X,_,X,_,X,_,_]),
+        spell(MyMineral, MyMineralList).
 
-process(Position, ObjectLetter, WordList)
-    :- nth0(Position, WordList, X),
-        writeln(X).
+merge([X], [Y], [[X,Y]]).
+merge([X|L1], [Y|L2], [[X,Y]|L3]):-merge(L1, L2, L3).
 
-do([],_,_).
-do([H|T],[H1|T1], X)
-    :- process(H,H1,X),
-        do(T, T1, X).
+append3(Xs, Ys, Zs, XsYsZs) :-
+   append(Xs, YsZs, XsYsZs),
+   append(Ys, Zs, YsZs).
 
-spell(X, Y)
-    :- atom_chars(X, Y).
 
-main :-
-    MyAnimal = [4,5,2,5,8,9],
-    MyVegetable = [6,5,8,7,8,5],
-    MyMineral = [7,3,7,8,7,1,9],
-    findall( X, animal( X ), Animals ),
-    findall( X, vegetable( X ), Vegetables ),
-    findall( X, mineral( X ), Minerals ),
-    removeImpossibleObjects(MyAnimal, Animals, Animals1),
-    removeImpossibleObjects(MyVegetable, Vegetables, Vegetables1),
-    removeImpossibleObjects(MyMineral, Minerals, Minerals1),
-    Word = [0,0,0,0,0,0,0,0,0],
-    firstElement(Animals1, PossibleAnimal),
-    spell(PossibleAnimal, PossibleAnimal1),
-    do(MyAnimal, PossibleAnimal1, Word).
-    %:- animal( dingo ).
-    %spell( PossibleAnimal, X ), write(X).
+main
+    :- MyAnimal = [4,5,2,5,8,9],
+        MyVegetable = [6,5,8,7,8,5],
+        MyMineral = [7,3,7,8,7,1,9],
+        findAnimal(MyAnimal, MyAnimalList),
+        writeln(MyAnimalList),
+        findVegetable(MyVegetable, MyVegetableList),
+        findMineral(MyMineral, MyMineralList),
+        append3(MyAnimalList, MyVegetableList, MyMineralList, Test),
+        append3(MyAnimal, MyVegetable, MyMineral, Clues),
+        merge(Test, Clues, Test1),
+        sort(2, @<, Test1, Test2),
+        append(Test2, Test3),
+        remove_integers(Test3, Test4),
+        string_chars(Test4, Test5),
+        writeln(Test5).
