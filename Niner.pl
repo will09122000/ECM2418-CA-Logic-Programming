@@ -31,51 +31,48 @@ mineral( sodium ).
 mineral( silver ).
 mineral( zircon ).
 
-isEqualLength( X, Y )
-    :- atom_length(X, XLen),
-        atom_length(Y, YLen),
-        XLen is YLen.
-
-removeImpossibleObjects(A, X, Y)
-    :- include(isEqualLength(A), X, Y).
-
-tryCombination(X, Y, Z)
-    :- Word = [0,0,0,0,0,0,0,0,0].
-
-firstElement([X|_],X).
-
-elementAt(X, [X|_], 1).
-elementAt(X, [_|T], I) :-
-    integer(I),
-    succ(V, I),
-    elementAt(X, T, V).
-
-process(Position, ObjectLetter, WordList)
-    :- writeln(Position).
-
-do([],_,_).
-do([H|T],[H1|T1], X)
-    :- process(H,H1,X),
-        do(T, T1, X).
-
 spell(X, Z)
     :- atom_chars(X, Z).
 
-main :-
-    MyAnimal = [4,5,2,5,8,9],
-    MyVegetable = [6,5,8,7,8,5],
-    MyMineral = [7,3,7,8,7,1,9],
-    findall( X, animal( X ), Animals ),
-    findall( X, vegetable( X ), Vegetables ),
-    findall( X, mineral( X ), Minerals ),
-    removeImpossibleObjects(MyAnimal, Animals, Animals1),
-    removeImpossibleObjects(MyVegetable, Vegetables, Vegetables1),
-    removeImpossibleObjects(MyMineral, Minerals, Minerals1),
-    Word = [0,0,0,0,0,0,0,0,0],
-    firstElement(Animals1, PossibleAnimal),
-    spell(PossibleAnimal, PossibleAnimal1),
-    elementAt(1, MyAnimal, Z),
-    writeln(Z).
-    %do(MyAnimal, PossibleAnimal1, Word).
-    %:- animal( dingo ).
-    %spell( PossibleAnimal, X ), write(X).
+findAnimal(X, Animal)
+    :- animal(X),
+        spell(X, [_,Z,_,Z,_,_]),
+        spell(X, Animal).
+
+findVegetable(X, Vegetable)
+    :- vegetable(X),
+        spell(X, [_,_,Z,_,Z,_]),
+        spell(X, Vegetable).
+
+findMineral(X, Mineral)
+    :- mineral(X),
+        spell(X, [Z,_,Z,_,Z,_,_]),
+        spell(X, Mineral).
+
+merge([X], [Y], [[X,Y]]).
+merge([X|L1], [Y|L2], [[X,Y]|L3])
+    :- merge(L1, L2, L3).
+
+append3(X, Y, Z, FullList)
+    :- append(X, PartialList, FullList),
+        append(Y, Z, PartialList).
+
+remove_integers([],[]).
+remove_integers([X|Xs],[X|Ys]) :-
+        \+integer(X),!,
+        remove_integers(Xs,Ys).
+remove_integers([_|Xs],Ys) :-
+        remove_integers(Xs,Ys).
+
+main
+    :- Clues = [4,5,2,5,8,9,6,5,8,7,8,5,7,3,7,8,7,1,9],
+        findAnimal(_, Animal),
+        findVegetable(_, Vegetable),
+        findMineral(_, Mineral),
+        append3(Animal, Vegetable, Mineral, X),
+        merge(X, Clues, X1),
+        sort(2, @<, X1, X2),
+        append(X2, X3),
+        remove_integers(X3, X4),
+        atomic_list_concat(X4, X5),
+        writeln(X5).
