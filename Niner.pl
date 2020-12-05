@@ -9,7 +9,6 @@ animal( horse ).
 animal( jaguar ).
 animal( kangaroo ).
 
-% Vegetables
 vegetable( artichoke ).
 vegetable( cabbage ).
 vegetable( carrot ).
@@ -20,7 +19,6 @@ vegetable( marrow ).
 vegetable( onion ).
 vegetable( potato ).
 
-% Minerals
 mineral( anatase ).
 mineral( basalt ).
 mineral( cobolt ).
@@ -44,17 +42,22 @@ tryCombination(X, Y, Z)
 
 firstElement([X|_],X).
 
-process(Position, WordList, Letter)
-    :- writeln('yes').
+elementAt(X, [X|_], 1).
+elementAt(X, [_|T], I) :-
+    integer(I),
+    succ(V, I),
+    elementAt(X, T, V).
+
+process(Position, ObjectLetter, WordList)
+    :- writeln(Position).
 
 do([],_,_).
 do([H|T],[H1|T1], X)
     :- process(H,H1,X),
-        writeln('no'),
         do(T, T1, X).
 
-spell(X, Y)
-    :- atom_chars(X, Y).
+spell(X, Z)
+    :- atom_chars(X, Z).
 
 main :-
     MyAnimal = [4,5,2,5,8,9],
@@ -68,7 +71,9 @@ main :-
     removeImpossibleObjects(MyMineral, Minerals, Minerals1),
     Word = [0,0,0,0,0,0,0,0,0],
     firstElement(Animals1, PossibleAnimal),
-    writeln(PossibleAnimal),
-    %do(MyAnimal, PossibleAnimal, Word).
+    spell(PossibleAnimal, PossibleAnimal1),
+    elementAt(1, MyAnimal, Z),
+    writeln(Z).
+    %do(MyAnimal, PossibleAnimal1, Word).
     %:- animal( dingo ).
-    spell( PossibleAnimal, X ), write(X).
+    %spell( PossibleAnimal, X ), write(X).

@@ -1,97 +1,74 @@
-% Checks that all 4 digits in the possible par are unique.
-unique([]).
-unique([X|Xs])
-    :- \+ memberchk(X, Xs),
-        unique(Xs).
+% Animals
+animal( aardvark ).
+animal( antelope ).
+animal( coyote ).
+animal( dingo ).
+animal( donkey ).
+animal( elephant ).
+animal( horse ).
+animal( jaguar ).
+animal( kangaroo ).
 
-% Split the par into 2 halves.
-split(L, 0, [], L).
-split([H|T], N, [H|X], L2)
-    :- N > 0,
-        M is N - 1,
-        split(T, M, X, L2).
+% Vegetables
+vegetable( artichoke ).
+vegetable( cabbage ).
+vegetable( carrot ).
+vegetable( celery ).
+vegetable( leek ).
+vegetable( lettuce ).
+vegetable( marrow ).
+vegetable( onion ).
+vegetable( potato ).
 
-% Returns true if the number is a PAR.
-par( X )
-    :- atom_length( X,4 ),
-        atom_chars( X,Y ),
-        unique( Y ),
-        % Check that the possible par does not contain a '0'.
-        \+ member('0', Y),
-        % Check that the second two digits is a factor of the first 2 digits.
-        split(Y,2,A,B),
-        atomic_list_concat(A, A1),
-        atomic_list_concat(B, B1),
-        atom_number(A1, A2),
-        atom_number(B1, B2),
-        0 is A2 mod B2.
+% Minerals
+mineral( anatase ).
+mineral( basalt ).
+mineral( cobolt ).
+mineral( copper ).
+mineral( galena ).
+mineral( nickel ).
+mineral( sodium ).
+mineral( silver ).
+mineral( zircon ).
 
-% Generates a list of possible pars.
-% Maximim value added to the list is '9876' as that is the largest 4 digit value that
-% does not have any repeating values.
-findPossiblePars(9999, [9999]).
-findPossiblePars(N, [N|T])
-    :- N < 9876,
-        N1 is N+1,
-        findPossiblePars(N1, T).
+isEqualLength( X, Y )
+    :- atom_length(X, XLen),
+        atom_length(Y, YLen),
+        XLen is YLen.
 
-% Generates a list of pars.
-% Minimum value added to the list is '1234' as that is the smallest 4 digit value that
-% does not have any repeating values.
-pars( PARS )
-    :- findPossiblePars(1234, Y),
-        include(par, Y, PARS).
+removeImpossibleObjects(A, X, Y)
+    :- include(isEqualLength(A), X, Y).
 
-% Returns the first element of a list.
-firstElement(X,[X|_]).
+tryCombination(X, Y, Z)
+    :- Word = [0,0,0,0,0,0,0,0,0].
 
-% Returns true if the two numbers are a PARTY.
-party( A,B )
-    :- par(A),
-        par(B),
-        atom_chars( A,A1 ),
-        atom_chars( B,B1 ),
-        append( A1,B1,AB ),
-        unique(AB),
-        X = ['1','2','3','4','5','6','7','8','9'],
-        subtract(X, AB, R),
-        firstElement(MissingItem, R),
-        atom_number(MissingItem, MissingNumber),
-        0 is A mod MissingNumber,
-        0 is B mod MissingNumber.
+firstElement([X|_],X).
 
-party( [A,B] )
-    :- par(A),
-        par(B),
-        atom_chars( A,A1 ),
-        atom_chars( B,B1 ),
-        append( A1,B1,AB ),
-        unique(AB),
-        X = ['1','2','3','4','5','6','7','8','9'],
-        subtract(X, AB, R),
-        firstElement(MissingItem, R),
-        atom_number(MissingItem, MissingNumber),
-        0 is A mod MissingNumber,
-        0 is B mod MissingNumber.
+process(Position, ObjectLetter, WordList)
+    :- nth0(Position, WordList, X),
+        writeln(X).
 
-findPossiblePartys(PARS, PossiblePartys)
-    :- findall([X,Y], (member(X, PARS), member(Y, PARS)), PossiblePartys).
+do([],_,_).
+do([H|T],[H1|T1], X)
+    :- process(H,H1,X),
+        do(T, T1, X).
 
-sort_partys([], []).
-sort_partys([H|T], X)
-    :- sort(H, Y),
-        append(PARTYS, [Y], X),
-        sort_partys(T, PARTYS).
+spell(X, Y)
+    :- atom_chars(X, Y).
 
-partys( PARTYS )
-    :- pars( PARS ),
-        findPossiblePartys(PARS, PossiblePartys),
-        include(party, PossiblePartys, PARTYS_UNSORTED),
-        sort_partys(PARTYS_UNSORTED, PARTYS_SORTED),
-        sort(PARTYS_SORTED, PARTYS).
-
-main
-    :- par( 7826 ),
-        pars( PARS ), write( PARS ),
-        party( 9632, 5418 ),
-        partys( PARTYS ), write( PARTYS ).
+main :-
+    MyAnimal = [4,5,2,5,8,9],
+    MyVegetable = [6,5,8,7,8,5],
+    MyMineral = [7,3,7,8,7,1,9],
+    findall( X, animal( X ), Animals ),
+    findall( X, vegetable( X ), Vegetables ),
+    findall( X, mineral( X ), Minerals ),
+    removeImpossibleObjects(MyAnimal, Animals, Animals1),
+    removeImpossibleObjects(MyVegetable, Vegetables, Vegetables1),
+    removeImpossibleObjects(MyMineral, Minerals, Minerals1),
+    Word = [0,0,0,0,0,0,0,0,0],
+    firstElement(Animals1, PossibleAnimal),
+    spell(PossibleAnimal, PossibleAnimal1),
+    do(MyAnimal, PossibleAnimal1, Word).
+    %:- animal( dingo ).
+    %spell( PossibleAnimal, X ), write(X).
