@@ -72,6 +72,7 @@ removeInts( [_|T], T1 )
     :- removeInts( T, T1 ).
 
 % Finds a solution to the niner.
+% Tested on https://swish.swi-prolog.org/
 main
     :- Clues = [4,5,2,5,8,9,6,5,8,7,8,5,7,3,7,8,7,1,9],
         % Finds the correct word for each category.

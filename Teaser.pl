@@ -53,7 +53,7 @@ party( A, B )
         atom_chars( B, B1 ),
         append( A1, B1, AB ),
         unique( AB ),
-        X = ['1','2','3','4','5','6','7','8','9'],
+        X = ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
         subtract( X, AB, R ),
         firstElement( MissingItem, R ),
         atom_number( MissingItem, MissingNumber ),
@@ -70,7 +70,7 @@ partyList( [A,B] )
         atom_chars( B, B1 ),
         append( A1, B1, AB ),
         unique( AB ),
-        X = ['1','2','3','4','5','6','7','8','9'],
+        X = ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
         subtract( X, AB, R ),
         firstElement( MissingItem, R ),
         atom_number( MissingItem, MissingNumber ),
@@ -97,7 +97,7 @@ partys( PARTYS )
         % Removes repeats.
         sort( X2, PARTYS ).
 
-% All tested on https://swish.swi-prolog.org/
+% Tested on https://swish.swi-prolog.org/
 main
     % Question 2.1
     :- par( 7826 ).
