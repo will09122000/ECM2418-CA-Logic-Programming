@@ -85,14 +85,14 @@ main
         append( Vegetable, Mineral, PartialList ),
 
         % Creates a list of lists.
-        zip( FullList, Clues, X ),
+        zip( FullList, Clues, SolutionZipped ),
 
         % Sorts the list of lists using the number and removes duplicates.
-        sort( 2, @<, X, X1 ),
+        sort( 2, @<, SolutionZipped, SolutionSorted ),
 
         % Converts the list of lists to one list.
-        append( X1, X2 ),
+        append( SolutionSorted, SolutionListWithNum ),
 
-        removeInts( X2, X3 ),
-        atomic_list_concat( X3, Solution ),
+        removeInts( SolutionListWithNum, SolutionList ),
+        atomic_list_concat( SolutionList, Solution ),
         writeln( Solution ).

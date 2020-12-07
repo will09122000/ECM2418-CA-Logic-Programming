@@ -91,11 +91,11 @@ sort_partys( [H|T], X )
 % Returns a list of all partys.
 partys( PARTYS )
     :- pars( PARS ),
-        findPossiblePartys( PARS, X ),
-        include( partyList, X, X1 ),
-        sort_partys( X1, X2 ),
-        % Removes repeats.
-        sort( X2, PARTYS ).
+        findPossiblePartys( PARS, PossiblePartys ),
+        include( partyList, PossiblePartys, PartysWithDuplicates ),
+        sort_partys( PartysWithDuplicates, PartysWithDuplicatesSorted ),
+        % Removes duplicates.
+        list_to_set( PartysWithDuplicatesSorted, PARTYS ).
 
 % Tested on https://swish.swi-prolog.org/
 main
